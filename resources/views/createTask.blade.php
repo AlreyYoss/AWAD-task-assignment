@@ -1,10 +1,14 @@
 @extends('app')
 @section('content')
-<div class="container p-5">
+<div class="container p-5 border border-2 rounded mt-5 w-75">
+ 
   <form action="{{url('/create/task')}}" id="taskForm" method="post" enctype="multipart/form-data">
     @csrf
     <div class="row mt-2">
-      <a href="{{url('home')}}" class="previous round"><i class="fa fa-angle-left fa-2x" aria-hidden="true"></i></a>
+      <a href="{{url('home')}}" class="previous round"><i class="fa fa-angle-left fa-2x" style="color:red" aria-hidden="true"><span class="ms-2 fs-5 text-center">back</span></i></a>
+    </div>
+    <div class="row mb-3">
+      <h1>Task Assignments</h1>
     </div>
     <div class="mb-3 row">
       <label for="title" class="col-sm-2 col-form-label">Task Title</label>
