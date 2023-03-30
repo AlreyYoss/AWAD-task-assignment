@@ -18,6 +18,9 @@ Route::get('/', function () {
     return view('welcome');
 });
 
-Route::view('home', 'home');
+Route::get('home', [TaskController::class, 'home']);
 Route::view('create','createTask');
 Route::post('create/task',[TaskController::class,'createTask']);
+Route::get('edit/task/{id}',[TaskController::class,'editTask']);
+Route::post('save/task/{id}',[TaskController::class,'saveTask']);
+Route::get('delete/task/{id}',[TaskController::class,'deleteTask']);
