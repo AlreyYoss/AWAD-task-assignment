@@ -19,5 +19,9 @@ Route::get('/', function () {
 });
 
 Route::view('home', 'home');
+Route::get('homeStudent', [TaskController::class, 'viewTask']);
+Route::get('upload/{id}', [TaskController::class, 'upload']);
+Route::post('upload/{id}', [TaskController::class, 'store']);
+Route::get('download/{id}', [TaskController::class, 'download']);
 Route::view('create','createTask');
 Route::post('create/task',[TaskController::class,'createTask']);
