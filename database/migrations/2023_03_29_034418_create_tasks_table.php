@@ -19,7 +19,7 @@ return new class extends Migration
             $table->string('upload')->nullable();
             $table->string('assigner_id')->nullable();
             $table->string('receiver_id')->nullable();
-            $table->date('due_date')->nullable();
+            $table->string('due_date')->nullable();
             $table->timestamps();
         });
     }
