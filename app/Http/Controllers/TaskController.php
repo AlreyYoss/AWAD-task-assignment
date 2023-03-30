@@ -148,7 +148,7 @@ class TaskController extends Controller
                 foreach($req->file('filenames') as $file){
                     $fileName = time().'_'.$file->getClientOriginalName();
                     $filePath = $file->storeAs('public', $fileName);
-                    $fileModel->upload = $fileName;
+                    $fileModel->studentUploadPath = $fileName;
                     $fileModel->save();
                 }
                 
