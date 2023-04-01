@@ -171,6 +171,7 @@
           <p class="mt-3"><strong>Status: </strong><span class="badge" id="modal-task-status"></span></p>
           <p><strong>Assigned to: </strong><span id="modal-task-email"></span></p>
           <p><strong>Uploaded Doc: </strong><a href="" id="modal-task-upload"></a></p>
+          <div id='fill'></div>
         </div>
         <div class="modal-footer">
             <a href="" class="btn btn-warning" id="modal-task-edit">Edit Task</a>
@@ -196,6 +197,16 @@
         }
         else if(task.status == 'submitted'){
             $('#modal-task-status').toggleClass('bg-success');
+
+            var html = '<p><strong>Submitted Doc: </strong><a href="" id="modal-employee-upload"></a></p>'
+            $('#fill').html(html);
+            if(task.receiver_upload != null){
+                $('#modal-employee-upload').text(task.receiver_file_name);
+                $('#modal-employee-upload').attr("href", "{{ asset("") }}"+task.receiver_upload);
+                var file_name = (task.receiver_file_name).split(".")[0];
+                $('#modal-employee-upload').attr("download", file_name);
+            }
+            
         }
         else if(task.status == 'late'){
             $('#modal-task-status').toggleClass('bg-danger');
