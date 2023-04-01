@@ -1,0 +1,239 @@
+*, *::after, *::before {
+	margin: 0;
+	padding: 0;
+	box-sizing: border-box;
+    user-select: none;
+}
+body{
+    width: 100%;
+    height: 100vh;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    font-family: 'Montserrat', sans-serif;
+	background-color:#ecf0f3;
+}
+/**/
+.main{
+    position: relative;
+    width: 1000px;
+	min-width: 1000px;
+	min-height: 600px;
+    height: 600px;
+	box-shadow:
+		10px 10px 10px #d1d9e6,
+		-10px -10px 10px #f9f9f9;
+	border-radius: 12px;
+}
+.container{
+    position: absolute;
+    width: 600px;
+    height: 100%;
+}
+.form{
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    flex-direction: column;
+    height: 100%;
+}
+.form__input{
+        width: 350px;
+        height: 40px;
+        margin: 4px 0;
+
+        padding-left: 25px;
+        font-size: 13px;
+        letter-spacing: .15px;
+        border: none;
+        outline: none;
+
+        font-family: 'Montserrat', sans-serif;
+		background-color: #ecf0f3;
+		transition: .25s ease;
+		border-radius: 8px;
+
+		box-shadow:
+			inset 2px 2px 4px #d1d9e6,
+			inset -2px -2px 4px #f9f9f9;
+}
+.form__input:focus{
+			box-shadow:
+				inset 4px 4px 4px #d1d9e6,
+				inset -4px -4px 4px #f9f9f9;
+}
+
+.title{
+    font-size: 34px;
+    font-weight: 700;
+    line-height: 3;
+    color: #181818;
+    text-align: center;
+}
+.description{
+    font-size: 14px;
+    letter-spacing: .25px;
+    text-align: center;
+    line-height: 1.6;
+}
+.button{
+    width: 180px;
+    height: 50px;
+    border-radius: 25px;
+    margin-top: 50px;
+    font-weight: 700;
+    font-size: 14px;
+    letter-spacing: 1.15px;
+    cursor: pointer;
+	background-color: #4B70E2;
+	color: #f9f9f9;
+	box-shadow:
+		8px 8px 16px #d1d9e6,
+		-8px -8px 16px #f9f9f9;
+
+	border: none;
+    outline: none;
+}
+
+.form-container{
+    left: calc(100% - 600px );
+}
+
+.left-box-outer-container{
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    position: absolute;
+    top: 0;
+    left: 0;
+    height: 100%;
+    width: 400px;
+
+    padding: 50px;
+    z-index: 200;
+
+    background-color: #ecf0f3;
+    overflow: hidden;
+
+
+	box-shadow:
+		4px 4px 10px #d1d9e6,
+		-4px -4px 10px #f9f9f9;
+}
+.left-box{
+    width: 500px;
+    height: 500px;
+    border-radius: 50%;
+	background-color:#ecf0f3;
+	box-shadow:
+		inset 8px 8px 12px #d1d9e6,
+		inset -8px -8px 12px #f9f9f9;
+}
+
+
+.left__box__container{
+    display: flex;
+    align-items: center;
+    flex-direction: column;
+    position: absolute;
+    padding: 50px 55px;
+    top:100px;
+    left: 0px;
+    transition: 1.25s ;
+}
+
+   
+.button:hover{
+	box-shadow:
+		6px 6px 10px #d1d9e6,
+		-6px -6px 10px #f9f9f9;
+	transform: scale(.985);
+	transition: .25s;
+}
+.button:active,
+.button:focus{
+	box-shadow:
+		2px 2px 6px #d1d9e6,
+		-2px -2px 6px #f9f9f9;
+	transform: scale(.97);
+	transition: .25s;
+}
+.left__box__title.title{
+    line-height:1.8;
+    margin-bottom:35px;
+}
+.left-box-btn-link{
+    text-decoration: none;
+    color:#f9f9f9;
+}
+.outer-container{
+    background-color:rgba(255,255,255,.9);
+    width: 100%;
+    height: 100%;
+  }
+  
+  
+  .icon-box {
+    background-color: rgba(255, 255, 255);
+    display: inline-block;
+    align-items: center;
+    justify-content: center;
+    gap: 20px;
+    padding: 20px;
+    border-radius: 20px;
+    flex-direction: column;
+    text-align: center;
+    width: 45%;
+    box-shadow:
+          10px 10px 10px #d1d9e6,
+          -10px -10px 10px #f9f9f9;
+    cursor: pointer;
+    margin-top: 50px;
+    height: 45%;
+    transition: transform 0.3s ease-in-out;
+  }
+  
+  .icon {
+    font-size: 40px;
+    margin-top: 40px;
+  }
+  
+  .text {
+    text-align: center;
+    color: black;
+  }
+  
+  .text h3 {
+    margin-bottom: 10px;
+    margin-top:20px;
+  }
+  
+  .text p {
+    margin: 0;
+  }
+  .icon-span{
+    color: black;
+  }
+  #icon-box-2{
+    margin-left: 45px;
+  }
+  .icon-box:hover {
+    background-color: #4B70E2;
+    transform: translateY(-10px);
+  }
+  .icon-box:hover .text {
+    color: #F5F6F8;
+  }
+  .icon-box:hover .icon-span {
+    color: #F5F6F8;
+  }   
+  .inner-container h1{
+    text-align: center; 
+    color: black; 
+    margin-top:130px;
+}
+.invalid-feedback{
+  font-size: 13px;
+  color:red;
+}
+

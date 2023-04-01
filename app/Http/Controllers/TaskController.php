@@ -4,10 +4,14 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use Illuminate\Http\Facades\DB;
-use App\Models\Task;
 use Illuminate\Support\Facades\Response;
-use App\Models\User;
 use Illuminate\Support\Facades\Storage;
+use Illuminate\Support\Facades\Auth;
+use Carbon\Carbon;
+use App\Models\User;
+use App\Models\Employer;
+use App\Models\Employee;
+use App\Models\Task;
 
 class TaskController extends Controller
 {
@@ -15,16 +19,36 @@ class TaskController extends Controller
     public function home(){
         // $tasks = Task::orderBy('id', 'desc')->get();
         // return view('index', compact('tasks'));
-        $tasks = Task::where('assigner_id',1)->where('status','assigned')->get();
+        // dd(Auth::user()->id);
+        $employer_id = Auth::user()->id;
+        $tasks['assigned'] = Task::where('assigner_id',$employer_id)->where('status','assigned')->get();
+        $index = 0;
+        foreach($tasks['assigned'] as $key=>$task){
+            $today = Carbon::today();
+            $due_date = Carbon::createFromFormat('Y-m-d',$task['due_date']);
+            // dd($due_date);
+            if($today->gt($due_date)){
+                Task::where('id',$task['id'])->update(['status'=>'late']);
+                unset($tasks['assigned'][$index]);
+                // unset($tasks['assigned'][$key]);
+            }
+            $index++;
+        }
+        $tasks['submitted'] = Task::where('assigner_id',$employer_id)->where('status','submitted')->get();
+        $tasks['late'] = Task::where('assigner_id',$employer_id)->where('status','late')->get();
+
         // dd($tasks);
         if(!empty($tasks)){
-            for($i = 0; $i<count($tasks); $i++){
-                $tasks[$i]['email'] = User::find($tasks[$i]['receiver_id'])->email;
-                $tasks[$i]['assigned_on'] = $tasks[$i]['created_at']->format('Y-m-d');
-                // dd(  $tasks[$i]['assigned_on']);
+            foreach($tasks as $parentKey=>$task){
+                foreach($task as $key=>$item){
+                    $task[$key]['email'] = Employee::find($item['receiver_id'])->email;
+                    $task[$key]['assigned_on'] = $item['created_at']->format('Y-m-d');
+                    // dd(  $tasks[$i]['assigned_on']);
+                }
             }
             
         }
+        // dd($tasks);
         // dd($tasks);
         return view('home',['tasks'=>$tasks,'data'=>session('data')?? null]);
     }
@@ -32,13 +56,13 @@ class TaskController extends Controller
     public function createTask(Request $request)
     {
         
-        $receiver_id = User::where('email',$request->input('receiver_email'))->value('id');
+        $receiver_id = Employee::where('email',$request->input('receiver_email'))->value('id');
         if(empty($receiver_id)){
             $result = [
                 'status' => 'Failed',
                 'info'   => 'Invalid email input',
             ];
-            return redirect('home')->with(['data'=>$result]);
+            return redirect('employer')->with(['data'=>$result]);
         }
 
         // Handle the file upload
@@ -58,26 +82,26 @@ class TaskController extends Controller
             'receiver_id' => $receiver_id,
             'status'    => 'assigned',
             'upload'    => !empty($name)? 'storage/'.$name : null,
-            'assigner_id' => 1,
+            'assigner_id' => Auth::user()->id,
             'assigner_file_name' => $oriName ?? null,
         ];
         Task::create($data);
 
         $result = [
             'status' => 'Success',
-            'info'   => 'Created successfully',
+            'info'   => 'Task Created Successfully',
         ];
-        return redirect('home')->with(['data'=>$result]);
+        return redirect('employer')->with(['data'=>$result]);
     }
 
     public function editTask($id){
         $data = Task::find($id);
-        $data->email = User::find($data->receiver_id)->email;
+        $data->email = Employee::find($data->receiver_id)->email;
         return view('editTask',['data'=>$data]);
     }
 
     public function saveTask(Request $request, $id){
-        $receiver_id = User::where('email',$request->input('receiver_email'))->value('id');
+        $receiver_id = Employee::where('email',$request->input('receiver_email'))->value('id');
         if(empty($receiver_id)){
             $result = [
                 'status' => 'Failed',
@@ -111,9 +135,9 @@ class TaskController extends Controller
 
         $result = [
             'status' => 'Success',
-            'info'   => 'Edit successfully',
+            'info'   => 'Task Edit Successfully',
         ];
-        return redirect('home')->with(['data'=>$result]);
+        return redirect('employer')->with(['data'=>$result]);
     }
 
     public function deleteTask($id){
@@ -121,9 +145,9 @@ class TaskController extends Controller
 
         $result = [
             'status' => 'Success',
-            'info'   => 'Delete successfully',
+            'info'   => 'Task Delete Successfully',
         ];
-        return redirect('home')->with(['data'=>$result]);
+        return redirect('employer')->with(['data'=>$result]);
     }
 
     public function viewTask() {

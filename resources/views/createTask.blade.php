@@ -1,8 +1,10 @@
-@extends('app')
+{{-- @extends('app') --}}
+@extends('layouts.app')
 @section('content')
+
 <div class="container p-5 border border-2 rounded mt-5 ">
   <div class="row mb-3">
-    <a class="col-4" href="{{url('home')}}" class="previous round "><i class="fa fa-angle-left fa-2x" style="color:red;" aria-hidden="true"></i></a>
+    <a class="col-4" href="{{url('employer')}}" class="previous round "><i class="fa fa-angle-left fa-2x" style="color:red;" aria-hidden="true"></i></a>
     <div class="col">
       <h1>Create new task</h1>
     </div>
@@ -41,4 +43,5 @@
     <div class="mt-5 text-center"><input class="btn btn-primary profile-button" type="submit" value="Create Task"></div>
   </form>
 </div>
+
 @endsection

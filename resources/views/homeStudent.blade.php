@@ -1,8 +1,6 @@
-@extends('app')
+{{-- @extends('app') --}}
+@extends('layouts.app')
 @section('content')
-    <nav class="navbar fixed-top navbar-light bg-light">
-        Nav Bar
-    </nav>
 
     <div class="container p-5">
         <div>
