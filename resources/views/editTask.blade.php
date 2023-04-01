@@ -1,4 +1,6 @@
-@extends('app')
+{{-- @extends('app') --}}
+@extends('layouts.app')
+
 @section('content')
 <div class="container p-5 border border-2 rounded mt-5 ">
   <div class="row mb-3">
