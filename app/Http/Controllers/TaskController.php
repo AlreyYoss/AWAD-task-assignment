@@ -55,7 +55,13 @@ class TaskController extends Controller
 
     public function createTask(Request $request)
     {
-        
+        $request->validate([
+            'upload' => 'mimes:doc,pdf,docx,zip,png,jpge,jpg',
+            'receiver_email' => 'required|email',
+            'title' => 'required',
+            'description' => 'required',
+            'due_date'  => 'required',
+        ]);
         $receiver_id = Employee::where('email',$request->input('receiver_email'))->value('id');
         if(empty($receiver_id)){
             $result = [
@@ -101,6 +107,13 @@ class TaskController extends Controller
     }
 
     public function saveTask(Request $request, $id){
+        $request->validate([
+            'upload' => 'mimes:doc,pdf,docx,zip,png,jpge,jpg',
+            'receiver_email' => 'required|email',
+            'title' => 'required',
+            'description' => 'required',
+            'due_date'  => 'required',
+        ]);
         $receiver_id = Employee::where('email',$request->input('receiver_email'))->value('id');
         if(empty($receiver_id)){
             $result = [
