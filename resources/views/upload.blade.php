@@ -1,11 +1,6 @@
 
-<html lang="en">
-<head>
-  <title>Submit File</title>
-  <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/css/bootstrap.min.css" >
-  <link href="https://maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css" rel="stylesheet" integrity="sha384-wvfXpqpZZVQGK6TAh5PVlGOfQNHSoD2xbE+QkPxCAFlNEevoEH3Sl0sibVcOQVnN" crossorigin="anonymous">
-  </head>
-<body>
+@extends('layouts.app')
+@section('content')  
 <div class="container">
     @if ($message = Session::get('error'))
     <div class="alert alert-danger alert-block">
@@ -24,10 +19,9 @@
 <form method="post" action="{{url('upload/')}}/{{$task['id']}}" enctype="multipart/form-data">
   {{csrf_field()}}
     <div class="input-group" >
-      <input type="file" name="filenames[]" class="myfrm form-control">
+      <input type="file" name="filenames" class="myfrm form-control">
     </div>
     <button type="submit" class="btn btn-success w-100 p-3" style="margin-top:10px">Submit</button>
 </form>
 </div>
-</body>
-</html>
+@endsection

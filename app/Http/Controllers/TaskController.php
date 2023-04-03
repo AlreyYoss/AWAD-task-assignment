@@ -53,6 +53,43 @@ class TaskController extends Controller
         return view('home',['tasks'=>$tasks,'data'=>session('data')?? null]);
     }
 
+    public function assigneeHome(){
+        // $tasks = Task::orderBy('id', 'desc')->get();
+        // return view('index', compact('tasks'));
+        // dd(Auth::user()->id);
+        $receiver_id = Auth::user()->id;
+        $tasks['assigned'] = Task::where('receiver_id',$receiver_id)->where('status','assigned')->get();
+        $index = 0;
+        foreach($tasks['assigned'] as $key=>$task){
+            $today = Carbon::today();
+            $due_date = Carbon::createFromFormat('Y-m-d',$task['due_date']);
+            // dd($due_date);
+            if($today->gt($due_date)){
+                Task::where('id',$task['id'])->update(['status'=>'late']);
+                unset($tasks['assigned'][$index]);
+                // unset($tasks['assigned'][$key]);
+            }
+            $index++;
+        }
+        $tasks['submitted'] = Task::where('receiver_id',$receiver_id)->where('status','submitted')->get();
+        $tasks['late'] = Task::where('receiver_id',$receiver_id)->where('status','late')->get();
+        
+        // dd($tasks);
+        if(!empty($tasks)){
+            foreach($tasks as $parentKey=>$task){
+                foreach($task as $key=>$item){
+                    $task[$key]['email'] = Employer::find($item['assigner_id'])->email;
+                    $task[$key]['assigned_on'] = $item['created_at']->format('Y-m-d');
+                    // dd(  $tasks[$i]['assigned_on']);
+                }
+            }
+            
+        }
+        // dd($tasks);
+        // dd($receiver_id);
+        return view('assigneeHome',['tasks'=>$tasks,'data'=>session('data')?? null]);
+    }
+
     public function createTask(Request $request)
     {
         $request->validate([
@@ -163,10 +200,6 @@ class TaskController extends Controller
         return redirect('employer')->with(['data'=>$result]);
     }
 
-    public function viewTask() {
-        $data = Task::all();
-        return view('homeStudent', ['tasks'=>$data]);
-    }
 
     public function upload($id)
     {
@@ -174,30 +207,44 @@ class TaskController extends Controller
         return view('upload', ['task' => $data]);
     }
 
-    public function store(Request $req) {
-            $this->validate($req, [
+    public function store(Request $request) {
+            $this->validate($request, [
                         'filenames' => 'required',
-                        'filenames.*' => 'mimes:doc,pdf,docx,zip,png,jpge,jpg'
+                        'filenames.*' => 'mimes:doc,pdf,docx,zip,png,jpge,jpg,txt'
                 ]);
-            $fileModel = Task::find($req->id);
-            if ($req->hasFile('filenames')) {
-                $fileName = "-";
-                foreach($req->file('filenames') as $file){
-                    $fileName = time().'_'.$file->getClientOriginalName();
-                    $filePath = $file->storeAs('public', $fileName);
-                    $fileModel->studentUploadPath = $fileName;
-                    $fileModel->save();
+            $task= Task::find($request->id);
+            if ($request->hasFile('filenames')) {
+                if($task->receiver_upload != null){
+                    $path = explode("/",$task->receiver_upload);
+                    $oldname = end($path);
+                    if (Storage::exists('public/'.$oldname)) {
+                        Storage::delete('public/'.$oldname);
+                    }
                 }
                 
-                return back()
-                ->with('success','File has been uploaded.')
-                ->with('filenames', $fileName);
+                
+                $receiver_upload = $request->file('filenames');
+                $oriName = $receiver_upload->getClientOriginalName();
+                $name =  time().'.'.$receiver_upload->getClientOriginalExtension();
+                $path = $receiver_upload->storeAs('public', $name);
+
+                $task->receiver_upload = !empty($name)? 'storage/'.$name : null;
+                $task->receiver_file_name = $oriName;
+                $task->save();
+                $result = [
+                    'status' => 'Success',
+                    'info'   => 'Task Uploaded Successfully',
+                ];
+
+                return redirect('employee')
+                ->with(['data'=>$result]);
+                
             }
     }
 
     public function download($id) {
         $task = Task::find($id);
-        $filepath = storage_path().'/'.'app'.'/public/'.$task->upload;
+        $filepath = $task->upload;
         if (file_exists($filepath)) {
             return Response::download($filepath); 
         }

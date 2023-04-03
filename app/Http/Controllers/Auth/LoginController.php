@@ -45,7 +45,7 @@ public function employerLogin(Request $request)
     $request->validate(['email' => 'required|email', 'password' => 'required|min:6']);
     if (Auth::guard('employer')->attempt(['email' => $request->email, 'password' => $request->password], $request->get('remember'))) {
         $request->session()->put('employerEmail', $request->email);
-        return redirect()->intended('/employer');
+        return redirect()->intended('/home/employer');
     }
     //dd($request->only('email', 'password','remember'));
     return back()->withInput($request->only('email', 'remember'));
@@ -61,7 +61,7 @@ public function employeeLogin(Request $request)
     if (Auth::guard('employee')->attempt(['email' => $request->email, 'password' => $request->password], $request->get('remember'))) {
         $request->session()->put('employeeEmail', $request->email);
 
-        return redirect()->intended('/employee');
+        return redirect()->intended('/home/employee');
     }
     //dd($request->only('email', 'password','remember'));
     return back()->withInput($request->only('email', 'remember'));

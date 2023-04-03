@@ -38,15 +38,17 @@ Route::get('logout', [LoginController::class,'logout']);
 
 
 
+Route::view("/home/employee/profile", "profile")->middleware('auth.employee');
+Route::view("/home/employer/profile", "profile")->middleware('auth.employer');
 
 
 // home
 Route::group(['middleware' => 'auth:employer'], function () {
-    Route::get('upload/{id}', [TaskController::class, 'upload']);
-    Route::post('upload/{id}', [TaskController::class, 'store']);
+    
     Route::get('download/{id}', [TaskController::class, 'download']);
 
-    Route::get('employer', [TaskController::class, 'home']);
+    Route::get('home/employer', [TaskController::class, 'home']);
+    Route::post("/home/employer/profile", [ProfileController::class, 'updateEmployerProfile']);
 
     Route::view('create','createTask');
     Route::post('create/task',[TaskController::class,'createTask']);
@@ -56,7 +58,11 @@ Route::group(['middleware' => 'auth:employer'], function () {
 });
 
 Route::group(['middleware'=>'auth:employee'], function(){
-    Route::get('employee', [TaskController::class, 'viewTask']);
+    Route::get('home/employee', [TaskController::class, 'assigneeHome']);
+    Route::post("/home/employee/profile", [ProfileController::class, 'updateEmployeeProfile']);
+
+    Route::get('upload/{id}', [TaskController::class, 'upload']);
+    Route::post('upload/{id}', [TaskController::class, 'store']);
 });
 
 // Auth::routes();
