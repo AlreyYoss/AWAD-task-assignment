@@ -230,6 +230,9 @@ class TaskController extends Controller
 
                 $task->receiver_upload = !empty($name)? 'storage/'.$name : null;
                 $task->receiver_file_name = $oriName;
+                if($task->status != 'late'){
+                    $task->status = 'submitted';
+                }
                 $task->save();
                 $result = [
                     'status' => 'Success',
